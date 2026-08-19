@@ -13,7 +13,6 @@ edge_profile/
 edge_profile_root/
 
 # Reports
-evidencias/
 *.log
 *.png
 
