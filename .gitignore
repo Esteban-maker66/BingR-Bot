@@ -1,0 +1,22 @@
+venv/
+.venv/
+__pycache__/
+
+# Credentials
+.env
+
+# Browser Data
+edge_profile/
+
+# Playwright & profiles
+.edge-playwright-profile/
+edge_profile_root/
+
+# Reports
+evidencias/
+*.log
+*.png
+
+# Agents
+.agents/
+.codex/

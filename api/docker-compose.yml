@@ -1,0 +1,15 @@
+services:
+  rewards-bot:
+    build: .
+    container_name: bot_rewards_cont
+    network_mode: host
+    environment:
+      - BING_USER=${BING_USER}
+      - BING_PASS=${BING_PASS}
+      - CRON_SCHEDULE=${CRON_SCHEDULE:-15 14 * * *}
+      - TZ=${TZ:-America/Santo_Domingo}
+      - RUN_ON_START=${RUN_ON_START:-true}
+    volumes:
+      - .:/app
+      - /home/esteband/.config/microsoft-edge:/app/edge_profile_root
+      - ./evidencias:/app/evidencias
