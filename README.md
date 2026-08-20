@@ -51,8 +51,7 @@ By default, the bot runs in **headless** mode (in the background without opening
 uv run rewards_bot.py
 ```
 
-If you need to inspect the browser interactions or log in manually, run it with the flag: ```text HEADLESS=false.
-```
+If you need to inspect the browser interactions or log in manually, run it with the flag:
 
 ```bash
 HEADLESS=false uv run rewards_bot.py
