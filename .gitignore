@@ -12,6 +12,9 @@ edge_profile/
 .edge-playwright-profile/
 edge_profile_root/
 
+# Driver notes
+Driver_Notes/credits.html
+
 # Reports
 *.log
 *.png
