@@ -43,6 +43,21 @@ Run the bot:
 uv run rewards_bot.py
 ```
 
+## Execution Modes
+
+By default, the bot runs in **headless** mode (in the background without opening a browser window):
+
+```bash
+uv run rewards_bot.py
+```
+
+If you need to inspect the browser interactions or log in manually, run it with the flag: ```text HEADLESS=false.
+```
+
+```bash
+HEADLESS=false uv run rewards_bot.py
+```
+
 ## Browser profile
 
 The bot uses a dedicated Edge user data directory by default:
@@ -107,7 +122,3 @@ evidencias/
 *.png
 *.log
 ```
-
-## Notes
-
-This repository is for learning, local experimentation, and architecture practice. Keep credentials, cookies, real browser profiles, and other sensitive data out of version control.
