@@ -57,6 +57,27 @@ If you need to inspect the browser interactions or log in manually, run it with 
 HEADLESS=false uv run rewards_bot.py
 ```
 
+## Automation & Background Execution
+
+# Linux (systemd User Service)
+1. Copy the example service file to your systemd user directory:
+   ```bash
+   cp rewards-bot.service.example ~/.config/systemd/user/rewards-bot.service
+   ```
+
+2. Edit WorkingDirectory in the file to point to your repository root.
+
+3. Enable and start the daily timer (e.g., at 14:30):
+
+  ```bash
+  systemctl --user daemon-reload
+  systemctl --user enable --now rewards-bot.timer
+  ```
+
+# Windows & MacOS
+
+For Windows and macOS, run the bot directly via terminal as Execution Modes says, or configure your system's scheduler (Task Scheduler on Windows / launchd or cron on macOS):
+
 ## Browser profile
 
 The bot uses a dedicated Edge user data directory by default:
