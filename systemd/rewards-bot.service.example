@@ -1,0 +1,15 @@
+[Unit]
+Description=Microsoft Edge Rewards Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/your/rewards_bot    #Adjust WorkingDirectory to your absolute repository path
+ExecStart=/usr/bin/env uv run rewards_bot.py
+# EnvironmentFile=/path/to/your/rewards_bot/.env     #Optional: uncomment if you use an .env file
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
