@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer for Bing Rewards Bot (Daily at 2:30 PM for example)
+
+[Timer]
+OnCalendar=*-*-* 14:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
