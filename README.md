@@ -1,5 +1,3 @@
-# BingR-Bot
-
 <div align="center">
 
 # BingR-Bot
