@@ -1,111 +1,179 @@
+<div align="center">
+<p>
+  <img src="./pngwing.com.png" alt="Bing logo" width="180">
+</p>
+
 # BingR-Bot
 
-Personal automation project for experimenting with browser automation, persistent Microsoft Edge profiles, Playwright, Docker, and a future Go keyword service.
+**A focused browser-automation workspace for Microsoft Rewards experiments.**
 
-The main bot is written in Python and uses Playwright to run local desktop and mobile search flows with a dedicated browser profile.
+<p>
+  <img src="https://img.shields.io/badge/Python-%3E%3D3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14 or newer">
+  <img src="https://img.shields.io/badge/Playwright-1.62.0-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright 1.62.0">
+  <img src="https://img.shields.io/badge/Edge-channel%3A%20msedge-0078D4?style=flat-square&logo=microsoftedge&logoColor=white" alt="Microsoft Edge msedge channel">
+  <img src="https://img.shields.io/badge/uv-managed-6C47FF?style=flat-square&logo=python&logoColor=white" alt="uv managed dependencies">
+  <img src="https://img.shields.io/badge/Docker-base%3A%20Python%203.12.3-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker Python 3.12.3 base image">
+</p>
 
-## Project status
+<p>
+  <a href="#requirements">Requirements</a> ·
+  <a href="#configuration">Configuration</a> ·
+  <a href="#background-execution">Background execution</a> ·
+  <a href="#keyword-api">Keyword API</a>
+</p>
 
-- Python bot running with Playwright.
-- Dedicated Edge profile stored in `.edge-playwright-profile/`.
+</div>
+
+
+> **Project status:** The Python bot is functional. The Go keyword API and Docker workflow are still in development/paused.
+
+## Overview
+
+BingR-Bot is a personal automation project for exploring browser automation, persistent Microsoft Edge profiles, and desktop/mobile search flows. The main bot is written in Python and uses Playwright with a dedicated browser profile so its state remains separate from a normal Edge session.
+
+## Toolchain
+
+The version tags above describe the versions currently declared or used by the repository:
+
+| Tool | Version or channel | Role |
+| --- | --- | --- |
+| Python | `>=3.14` | Main bot runtime |
+| Playwright | `1.62.0` (lockfile) | Browser automation |
+| uv | Project manager | Dependency installation and execution |
+| Microsoft Edge | `stable` / `msedge` | Browser target |
+| Edge WebDriver | Matched dynamically to Edge | Driver support for the container workflow |
+| Docker | Python `3.12.3-slim` base image | Optional container runtime |
+| Go | Not pinned yet | Future keyword microservice |
+| systemd | User service and timer | Optional Linux scheduling |
+
+> **Compatibility note:** `pyproject.toml` requires Python 3.14 or newer, while `api/Dockerfile` currently starts from Python 3.12.3. Use the local `uv` workflow for the supported main runtime; align the Docker base image before relying on the container for the bot.
+
+<<<<<<< .merge_file_GOTAG3
+# Features
+=======
+## Features
+>>>>>>> .merge_file_JDvQ1h
+
 - Desktop and mobile execution modes.
-- Go keyword API planned under `api/`.
-- Docker support in progress.
+- Headless execution by default.
+- Persistent Edge profile support for authenticated sessions.
+- Configurable launch and navigation timeouts.
+- Optional daily scheduling through a systemd user timer.
+- Early Docker integration under `api/`.
 
-## Repository structure
+<<<<<<< .merge_file_GOTAG3
+# Repository layout
+=======
+## Repository layout
+>>>>>>> .merge_file_JDvQ1h
 
 ```text
 .
 ├── rewards_bot.py          # Main Python automation script
-├── pyproject.toml          # Python project metadata and dependencies
-├── uv.lock                 # Locked Python dependencies
-├── api/                    # Go microservice work in progress
+├── pyproject.toml          # Project metadata and dependencies
+├── uv.lock                 # Locked Python dependency versions
+├── api/                    # Container and future Go API work
 ├── Driver_Notes/           # Microsoft Edge WebDriver notes and licenses
-└── .vscode/                # Editor configuration
+└── systemd/                # Example user service and timer files
 ```
 
-## Requirements
+# Requirements
 
-- Python version compatible with `pyproject.toml`
-- `uv`
-- Microsoft Edge
-- Playwright
+- Python `3.14+` for the supported local workflow.
+- [uv](https://docs.astral.sh/uv/).
+- Microsoft Edge installed locally.
+- Playwright browser dependencies.
 
-Install dependencies:
+<<<<<<< .merge_file_GOTAG3
+## Installation
+=======
+### Installation
+>>>>>>> .merge_file_JDvQ1h
 
 ```bash
 uv sync
+uv run playwright install
 ```
 
-Run the bot:
+<<<<<<< .merge_file_GOTAG3
+## Run the bot
+=======
+### Run the bot
+>>>>>>> .merge_file_JDvQ1h
+
+The default mode is headless:
 
 ```bash
 uv run rewards_bot.py
 ```
 
-## Execution Modes
-
-By default, the bot runs in **headless** mode (in the background without opening a browser window):
-
-```bash
-uv run rewards_bot.py
-```
-
-If you need to inspect the browser interactions or log in manually, run it with the flag:
+To watch the browser or complete an interactive login:
 
 ```bash
 HEADLESS=false uv run rewards_bot.py
 ```
 
-## Automation & Background Execution
+<<<<<<< .merge_file_GOTAG3
+# Configuration
+=======
+## Configuration
+>>>>>>> .merge_file_JDvQ1h
 
-# Linux (systemd User Service)
-1. Copy the example service file to your systemd user directory:
-   ```bash
-   cp rewards-bot.service.example ~/.config/systemd/user/rewards-bot.service
-   ```
+Set environment variables inline or in a local `.env` file:
 
-2. Edit WorkingDirectory in the file to point to your repository root.
+| Variable | Default | Description |
+| --- | --- | --- |
+| `EDGE_USER_DATA_DIR` | `.edge-playwright-profile` | Dedicated Edge profile directory |
+| `EDGE_CHANNEL` | `msedge` | Playwright browser channel |
+| `HEADLESS` | `true` | Run with or without a visible browser |
+| `PLAYWRIGHT_LAUNCH_TIMEOUT_MS` | `30000` | Browser launch timeout |
+| `PLAYWRIGHT_NAVIGATION_TIMEOUT_MS` | `30000` | Page navigation timeout |
 
-3. Enable and start the daily timer (e.g., at 14:30):
-
-  ```bash
-  systemctl --user daemon-reload
-  systemctl --user enable --now rewards-bot.timer
-  ```
-
-# Windows & MacOS
-
-For Windows and macOS, run the bot directly via terminal as Execution Modes says, or configure your system's scheduler (Task Scheduler on Windows / launchd or cron on macOS):
-
-## Browser profile
-
-The bot uses a dedicated Edge user data directory by default:
-
-```text
-.edge-playwright-profile/
-```
-
-This keeps automation state separate from the real system Edge profile. The directory may contain cookies, session data, cache, and other local browser files, so it must not be committed.
-
-You can override the profile path with:
+Example:
 
 ```bash
-EDGE_USER_DATA_DIR=/path/to/profile uv run rewards_bot.py
+EDGE_USER_DATA_DIR=/path/to/profile \
+HEADLESS=false \
+uv run rewards_bot.py
 ```
 
-## Environment variables
+# Browser profile
 
-```env
-EDGE_USER_DATA_DIR=.edge-playwright-profile
-EDGE_CHANNEL=msedge
-PLAYWRIGHT_LAUNCH_TIMEOUT_MS=30000
-PLAYWRIGHT_NAVIGATION_TIMEOUT_MS=30000
+The bot uses `.edge-playwright-profile/` by default. This directory can contain cookies, session data, cache, and other local browser state. Keep it private and do not commit it.
+
+<<<<<<< .merge_file_GOTAG3
+# Background execution
+
+## Linux with systemd
+=======
+## Background execution
+
+### Linux with systemd
+>>>>>>> .merge_file_JDvQ1h
+
+The repository includes templates in `systemd/`. Copy the service and timer files into your user systemd directory, update `WorkingDirectory`, and enable the timer:
+
+```bash
+mkdir -p ~/.config/systemd/user
+cp systemd/rewards-bot.service.example ~/.config/systemd/user/rewards-bot.service
+cp systemd/rewards-bot.timer.example ~/.config/systemd/user/rewards-bot.timer
+
+# Edit WorkingDirectory in the service file first.
+systemctl --user daemon-reload
+systemctl --user enable --now rewards-bot.timer
 ```
 
-## Keyword API roadmap
+<<<<<<< .merge_file_GOTAG3
+## Windows and macOS
+=======
+### Windows and macOS
+>>>>>>> .merge_file_JDvQ1h
 
-The `api/` directory is intended to become a small Go microservice that collects keywords from public sources, starting with Wikimedia, and exposes them over HTTP for the Python bot.
+Run the bot directly as described above, or use Task Scheduler on Windows and launchd/cron on macOS.
+
+## Keyword API
+
+The `api/` directory is an experimental foundation for a Go microservice that will collect keywords from public sources, beginning with Wikimedia, and expose them to the Python bot.
 
 Planned endpoint:
 
@@ -113,7 +181,7 @@ Planned endpoint:
 GET /keywords?limit=31
 ```
 
-Example response:
+Planned response:
 
 ```json
 {
@@ -125,11 +193,18 @@ Example response:
 }
 ```
 
+## Docker
+
+The container workflow is still in progress. Its current image uses `python:3.12.3-slim`, installs Microsoft Edge Stable, and downloads the matching Edge WebDriver at build time. Review the Python compatibility note in [Toolchain](#toolchain) before using it.
+
+```bash
+cd api
+docker compose up --build
+```
+
 ## Git hygiene
 
-Do not commit generated files, credentials, browser profiles, local evidence, or logs.
-
-Typical ignored paths:
+Do not commit generated files, credentials, browser profiles, local evidence, or logs. Typical ignored paths include:
 
 ```gitignore
 .venv/
@@ -142,3 +217,7 @@ evidencias/
 *.png
 *.log
 ```
+
+## License and driver notes
+
+Microsoft Edge WebDriver notes and bundled license material are kept under `Driver_Notes/`. Review the applicable Microsoft terms before redistributing or deploying the project.
