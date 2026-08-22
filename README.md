@@ -1,6 +1,6 @@
 <div align="center">
 <p>
-  <img src="./pngwing.com.png" alt="Bing logo" width="180">
+  <img src="./assets/pngwing.com.png" alt="Bing logo" width="180">
 </p>
 
 # BingR-Bot
