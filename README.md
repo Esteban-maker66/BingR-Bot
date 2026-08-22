@@ -48,11 +48,8 @@ The version tags above describe the versions currently declared or used by the r
 
 > **Compatibility note:** `pyproject.toml` requires Python 3.14 or newer, while `api/Dockerfile` currently starts from Python 3.12.3. Use the local `uv` workflow for the supported main runtime; align the Docker base image before relying on the container for the bot.
 
-<<<<<<< .merge_file_GOTAG3
+
 # Features
-=======
-## Features
->>>>>>> .merge_file_JDvQ1h
 
 - Desktop and mobile execution modes.
 - Headless execution by default.
@@ -61,11 +58,8 @@ The version tags above describe the versions currently declared or used by the r
 - Optional daily scheduling through a systemd user timer.
 - Early Docker integration under `api/`.
 
-<<<<<<< .merge_file_GOTAG3
+
 # Repository layout
-=======
-## Repository layout
->>>>>>> .merge_file_JDvQ1h
 
 ```text
 .
@@ -84,22 +78,19 @@ The version tags above describe the versions currently declared or used by the r
 - Microsoft Edge installed locally.
 - Playwright browser dependencies.
 
-<<<<<<< .merge_file_GOTAG3
+
 ## Installation
-=======
+
 ### Installation
->>>>>>> .merge_file_JDvQ1h
+
 
 ```bash
 uv sync
 uv run playwright install
 ```
 
-<<<<<<< .merge_file_GOTAG3
-## Run the bot
-=======
-### Run the bot
->>>>>>> .merge_file_JDvQ1h
+
+## Run the Bot
 
 The default mode is headless:
 
@@ -113,11 +104,7 @@ To watch the browser or complete an interactive login:
 HEADLESS=false uv run rewards_bot.py
 ```
 
-<<<<<<< .merge_file_GOTAG3
 # Configuration
-=======
-## Configuration
->>>>>>> .merge_file_JDvQ1h
 
 Set environment variables inline or in a local `.env` file:
 
@@ -141,15 +128,9 @@ uv run rewards_bot.py
 
 The bot uses `.edge-playwright-profile/` by default. This directory can contain cookies, session data, cache, and other local browser state. Keep it private and do not commit it.
 
-<<<<<<< .merge_file_GOTAG3
 # Background execution
 
 ## Linux with systemd
-=======
-## Background execution
-
-### Linux with systemd
->>>>>>> .merge_file_JDvQ1h
 
 The repository includes templates in `systemd/`. Copy the service and timer files into your user systemd directory, update `WorkingDirectory`, and enable the timer:
 
@@ -163,11 +144,7 @@ systemctl --user daemon-reload
 systemctl --user enable --now rewards-bot.timer
 ```
 
-<<<<<<< .merge_file_GOTAG3
 ## Windows and macOS
-=======
-### Windows and macOS
->>>>>>> .merge_file_JDvQ1h
 
 Run the bot directly as described above, or use Task Scheduler on Windows and launchd/cron on macOS.
 
