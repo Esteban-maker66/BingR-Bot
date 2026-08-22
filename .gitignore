@@ -17,7 +17,6 @@ Driver_Notes/credits.html
 
 # Reports
 *.log
-*.png
 
 # Agents
 .agents/
