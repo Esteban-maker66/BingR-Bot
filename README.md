@@ -53,6 +53,7 @@ The version tags above describe the versions currently declared or used by the r
 
 - Desktop and mobile execution modes.
 - Headless execution by default.
+- automatic claiming points
 - Persistent Edge profile support for authenticated sessions.
 - Configurable launch and navigation timeouts.
 - Optional daily scheduling through a systemd user timer.
