@@ -27,7 +27,7 @@ SAMSUNG_A16_5G_CONF = {
 
 DESKTOP_CONF = {
     "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
-    "viewport": {"width": 1920, "height": 1080},
+    "viewport": {"width": 1280, "height": 720},
     "device_scale_factor": 1.0,
     "is_mobile": False,
     "has_touch": False,
@@ -37,6 +37,7 @@ ARGS = [
     "--disable-blink-features=AutomationControlled",
     "--no-first-run",
     "--no-default-browser-check",
+    "--disable-popup-blocking",
 ]
 
 HEADLESS_MODE = os.getenv("HEADLESS", "true").lower() in ("true", "1", "yes")
@@ -47,6 +48,7 @@ AMARILLO = "\033[33m"
 AZUL = "\033[34m"
 RESET = "\033[0m"
 
+# Hide browser automation indicators from web pages
 def hideFootPrintBot(context):
     """Inject JavaScript for hiding the automation flags natively."""
     context.add_init_script("""
@@ -56,6 +58,7 @@ def hideFootPrintBot(context):
     """)
 
 
+# Launch a persistent Edge browser context with the selected device settings
 def launchEdgeContext(pw, device_conf):
     os.makedirs(PROFILE_PATH, exist_ok=True)
     print(f"{AZUL}[i] Edge user data dir: {PROFILE_PATH}{RESET}", flush=True)
@@ -76,6 +79,7 @@ def launchEdgeContext(pw, device_conf):
     return context
 
 
+# Remove stale Edge profile lock files before starting the browser
 def cleanupProfileLock():
   """Removes stale Singleton locks before launching Edge to avoid ProcessSingleton errors."""
   lock_files = [
@@ -92,6 +96,7 @@ def cleanupProfileLock():
         pass
       
 
+    # Enter a search term and submit it to Bing
 def typeSearch(page, keyword):
     """Types keyword into search input & submit query."""
     search_select = "textarea[name='q'], input[name='q'], #sb_form_q"
@@ -113,12 +118,19 @@ def typeSearch(page, keyword):
         page.goto(search_URL, wait_until="domcontentloaded")
 
 
+# Return the first active page in the browser context
 def activePage(context):
-    page = context.new_page()
+    if context.pages:
+        page = context.pages[0]
+
+    else:
+        page = context.new_page()
     page.bring_to_front()
+
     return page
 
 
+# Load non-empty search keywords while ignoring comment lines
 def loadKeywords(file_path=KEYWORDS_FILE):
   """Loads search keywords from a text file, ignoring empty lines and comments."""
   if not os.path.exists(file_path):
@@ -143,6 +155,88 @@ def loadKeywords(file_path=KEYWORDS_FILE):
 KEYWORDS = loadKeywords()
 
 
+# Open the Rewards dashboard & claim available points
+def claimPoints(page, context):
+  """Navigates to Rewards dashboard and targets the 'Ready to claim' component directly"""
+  print(f"{VERDE}\n[+] Claiming accumulated points...{RESET}")
+
+  try:
+    print(f"{AZUL}[...]: Opening points panel.{RESET}")
+    click_area = page.locator("div.b_clickarea").first
+
+    if click_area.count() > 0:
+      click_area.click(force=True)
+      page.wait_for_timeout(1500)
+
+    claim_container = page.locator("a.user-pointclaim-container").first
+    target_url = None
+
+    if claim_container.count() > 0:
+      target_url = claim_container.get_attribute("href")
+
+    if not target_url or "javascript" in target_url:
+      target_url = "https://rewards.bing.com/"
+
+    print(f"{AZUL}[i]: Navigating to Rewards URL: {target_url}{RESET}")
+
+    dashboard_page = context.new_page()
+    dashboard_page.goto(target_url, wait_until="domcontentloaded")
+    dashboard_page.wait_for_timeout(3000)
+
+    # Find the specific card containing the Ready to claim text
+    print(f"{AZUL}[i]: Searching for 'Ready to claim' card...{RESET}")
+    
+    claim_card = (
+        dashboard_page.locator('div[class*="p-paddingCardDefault"]')
+        .filter(has_text="Ready to claim")
+        .first
+    )
+
+    if claim_card.count() > 0 and claim_card.is_visible():
+        print(f"{AZUL}[i]: 'Ready to claim' card found! Clicking...{RESET}")
+        claim_card.click(force=True)
+        dashboard_page.wait_for_timeout(2000)
+
+    else:
+        print(
+            f"{AMARILLO}[!]: 'Ready to claim' card not visible or already"
+            f" claimed.{RESET}"
+        )
+
+    # Click the final claim button inside the active modal or card
+    print(f"{AZUL}[i]: Looking for final claim button...{RESET}")
+    
+    final_claim_btn = (
+        dashboard_page.locator('button[class*="bg-bgCtrlBrandRest"]')
+        .filter(has_text="Claim")
+        .first
+    )
+
+    # Use a class-based fallback when button has no visible text
+    if final_claim_btn.count() == 0:
+        final_claim_btn = dashboard_page.locator(
+            'button[class*="bg-bgCtrlBrandRest"][class*="min-h-sizeCtrlLgDefault"]'
+        ).first
+
+    if final_claim_btn.count() > 0 and final_claim_btn.is_visible():
+        final_claim_btn.click(force=True)
+
+        print(f"{VERDE}[+] Points claimed successfully!{RESET}")
+        dashboard_page.wait_for_timeout(2500)
+
+    else:
+        print(
+            f"{AMARILLO}[!]: Final claim button not active. Nothing to claim.{RESET}"
+        )
+
+    dashboard_page.close()
+
+  except Exception as e:
+    print(f"{ROJO}[ER]: Error claiming accumulated points at {e}{RESET}")
+
+
+
+# Run the Bing search cycle (mobile device profile)
 def execMobileSearch():
     print(f"\n{VERDE}(+) Starting Bing Rewards Bot (A16 5G Mobile mode)...{RESET}")
 
@@ -170,12 +264,13 @@ def execMobileSearch():
             time.sleep(1)
 
         except Exception as e:
-            print(f"\n{ROJO}[ER]: Error during Mobile bot execution at: {e}{RESET}")
+            print(f"\n{ROJO}[ER]: Error during Mobile bot execution at {e}{RESET}")
 
         finally:
             context.close()
 
 
+# Run the Bing search cycle (desktop device profile)
 def execDesktopSearch():
     print(f"\n{VERDE}(+) Starting Bing Rewards Bot (Desktop Mode)...{RESET}")
 
@@ -199,13 +294,15 @@ def execDesktopSearch():
                 wait_time = random.uniform(4.35, 6.05)
                 time.sleep(wait_time)
                 
+            claimPoints(page, context)
 
             print(f"\n{VERDE}[✓] Desktop searching cycle has been completed successfully.{RESET}")
             time.sleep(1)
             return True
 
+
         except Exception as e:
-            print(f"\n{ROJO}[ER]: Error during desktop bot execution at: {e}{RESET}")
+            print(f"\n{ROJO}[ER]: Error during desktop bot execution at {e}{RESET}")
             return False
 
         finally:
@@ -216,7 +313,7 @@ if __name__ == "__main__":
     if not execDesktopSearch():
         raise SystemExit(1)
 
-    print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}")
+    print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
     time.sleep(2)
 
     if not execMobileSearch():
