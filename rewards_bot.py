@@ -58,7 +58,7 @@ def hideFootPrintBot(context):
     """)
 
 
-# Launch a persistent Edge browser context with the selected device settings
+# Launch a persistent Edge Browser context with the selected device settings
 def launchEdgeContext(pw, device_conf):
     os.makedirs(PROFILE_PATH, exist_ok=True)
     print(f"{AZUL}[i] Edge user data dir: {PROFILE_PATH}{RESET}", flush=True)
