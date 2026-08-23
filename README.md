@@ -1,9 +1,9 @@
 <div align="center">
 <p>
-  <img src="./assets/pngwing.com.png" alt="Bing logo" width="180">
+  <img src="./assets/pngwing.com.png" alt="Bing logo" width="120">
 </p>
-
-# BingR-Bot
+ 
+# BingR-Bot 
 
 **A focused browser-automation workspace for Microsoft Rewards experiments.**
 
