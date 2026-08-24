@@ -295,7 +295,6 @@ def execDesktopSearch():
                 time.sleep(wait_time)
                 
             claimPoints(page, context)
-            dailySet(page, context)
 
             print(f"\n{VERDE}[✓] Desktop searching cycle has been completed successfully.{RESET}")
             time.sleep(1)
