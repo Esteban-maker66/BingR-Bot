@@ -250,7 +250,7 @@ def execMobileSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            MOBILEDAILYSEARCH = KEYWORDS[:10]
+            MOBILEDAILYSEARCH = KEYWORDS[:1]
 
             for idx, keyword in enumerate(MOBILEDAILYSEARCH, 1):
                 print(f"• ({idx}/{len(MOBILEDAILYSEARCH)}) Searching:\n'{keyword}...'")
@@ -284,7 +284,7 @@ def execDesktopSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            DAILYSEARCH = KEYWORDS[:10]
+            DAILYSEARCH = KEYWORDS[:1]
 
             for idx, keyword in enumerate(DAILYSEARCH, 1):
                 print(f"• ({idx}/{len(DAILYSEARCH)}) Searching (Desktop):\n'{keyword}...'")
@@ -295,6 +295,7 @@ def execDesktopSearch():
                 time.sleep(wait_time)
                 
             claimPoints(page, context)
+            dailySet(page, context)
 
             print(f"\n{VERDE}[✓] Desktop searching cycle has been completed successfully.{RESET}")
             time.sleep(1)
@@ -316,5 +317,5 @@ if __name__ == "__main__":
     print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
     time.sleep(2)
 
-    if not execMobileSearch():
-        raise SystemExit(1)
+    #if not execMobileSearch():
+        #raise SystemExit(1)
