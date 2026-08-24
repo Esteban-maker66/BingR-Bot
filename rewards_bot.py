@@ -250,7 +250,7 @@ def execMobileSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            MOBILEDAILYSEARCH = KEYWORDS[:1]
+            MOBILEDAILYSEARCH = KEYWORDS[:10]
 
             for idx, keyword in enumerate(MOBILEDAILYSEARCH, 1):
                 print(f"• ({idx}/{len(MOBILEDAILYSEARCH)}) Searching:\n'{keyword}...'")
@@ -284,7 +284,7 @@ def execDesktopSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            DAILYSEARCH = KEYWORDS[:1]
+            DAILYSEARCH = KEYWORDS[:10]
 
             for idx, keyword in enumerate(DAILYSEARCH, 1):
                 print(f"• ({idx}/{len(DAILYSEARCH)}) Searching (Desktop):\n'{keyword}...'")
