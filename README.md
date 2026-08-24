@@ -1,11 +1,11 @@
 <div align="center">
 <p>
-  <img src="./assets/pngwing.com.png" alt="Bing logo" width="180">
+  <img src="./assets/pngwing.com.png" alt="Bing logo" width="120">
 </p>
-
+ 
 # BingR-Bot
 
-**A focused browser-automation workspace for Microsoft Rewards experiments.**
+**A focused browser-automation WorkScript for Microsoft Rewards experiments.**
 
 <p>
   <img src="https://img.shields.io/badge/Python-%3E%3D3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14 or newer">

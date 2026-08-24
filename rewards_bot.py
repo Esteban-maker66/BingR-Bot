@@ -316,5 +316,5 @@ if __name__ == "__main__":
     print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
     time.sleep(2)
 
-    #if not execMobileSearch():
-        #raise SystemExit(1)
+    if not execMobileSearch():
+        raise SystemExit(1)
