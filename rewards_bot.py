@@ -1,6 +1,8 @@
 import os
 import time
 import random
+import schedule
+from datetime import datetime
 from urllib.parse import quote_plus
 from playwright.sync_api import sync_playwright
 
@@ -47,6 +49,27 @@ VERDE = "\033[32m"
 AMARILLO = "\033[33m"
 AZUL = "\033[34m"
 RESET = "\033[0m"
+
+LAST_RUN_FILE = os.path.join(BASE_DIR, "last_run.txt")
+
+def hasRunToday():
+  if not os.path.exists(LAST_RUN_FILE):
+    return False
+
+  try:
+    with open(LAST_RUN_FILE, "r") as f:
+      last_date = f.read().strip()
+      return last_date == datetime.now().strftime("%Y-%m-%d")
+  except Exception:
+    return False
+
+def recordRunToday():
+  try:
+    with open(LAST_RUN_FILE, "w") as f:
+      f.write(datetime.now().strftime("%Y-%m-%d"))
+  except Exception as e:
+    print(f"{AMARILLO}[!]: cannot save last_run.txt: {e}{RESET}")
+
 
 # Hide browser automation indicators from web pages
 def hideFootPrintBot(context):
@@ -250,7 +273,7 @@ def execMobileSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            MOBILEDAILYSEARCH = KEYWORDS[:10]
+            MOBILEDAILYSEARCH = KEYWORDS[:1]
 
             for idx, keyword in enumerate(MOBILEDAILYSEARCH, 1):
                 print(f"• ({idx}/{len(MOBILEDAILYSEARCH)}) Searching:\n'{keyword}...'")
@@ -262,9 +285,11 @@ def execMobileSearch():
 
             print(f"\n{VERDE}[✓] Searching cycle has been completed succesfully.{RESET}")
             time.sleep(1)
+            return True
 
         except Exception as e:
             print(f"\n{ROJO}[ER]: Error during Mobile bot execution at {e}{RESET}")
+            return False
 
         finally:
             context.close()
@@ -284,7 +309,7 @@ def execDesktopSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            DAILYSEARCH = KEYWORDS[:10]
+            DAILYSEARCH = KEYWORDS[:1]
 
             for idx, keyword in enumerate(DAILYSEARCH, 1):
                 print(f"• ({idx}/{len(DAILYSEARCH)}) Searching (Desktop):\n'{keyword}...'")
@@ -309,12 +334,35 @@ def execDesktopSearch():
             context.close()
 
 
+def mainCron():
+   print("Starting scheduled cron cycle...")
+   try:  
+        if not execDesktopSearch():
+                return
+            
+        print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
+        time.sleep(2)
+
+        if not execMobileSearch():
+            return
+
+        recordRunToday()
+
+   except Exception as e:
+    print(f"{ROJO}[ER]: Error in mainCron: {e}{RESET}")
+
+schedule.every().day.at("15:56").do(mainCron)
+            
 if __name__ == "__main__":
-    if not execDesktopSearch():
-        raise SystemExit(1)
+    print("[i] Rewards Daemon active. Waiting for scheduled tasks...")
 
-    print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
-    time.sleep(2)
-
-    if not execMobileSearch():
-        raise SystemExit(1)
+    if not hasRunToday():
+        print(
+        f"{AMARILLO}[i] Task hasn't run today (boot after scheduled time)."
+        f" Running now...{RESET}"
+        )
+        mainCron()
+    
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
