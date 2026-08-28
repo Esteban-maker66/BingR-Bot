@@ -52,6 +52,8 @@ RESET = "\033[0m"
 
 LAST_RUN_FILE = os.path.join(BASE_DIR, "last_run.txt")
 
+thistime = "16:18" # time for execution
+
 def hasRunToday():
   if not os.path.exists(LAST_RUN_FILE):
     return False
@@ -230,7 +232,7 @@ def claimPoints(page, context):
     print(f"{AZUL}[i]: Looking for final claim button...{RESET}")
     
     final_claim_btn = (
-        dashboard_page.locator('button[class*="bg-bgCtrlBrandRest"]')
+        dashboard_page.locator('div[class*="bg-bgCtrlBrandRest"]')
         .filter(has_text="Claim")
         .first
     )
@@ -351,7 +353,7 @@ def mainCron():
    except Exception as e:
     print(f"{ROJO}[ER]: Error in mainCron: {e}{RESET}")
 
-schedule.every().day.at("15:56").do(mainCron)
+schedule.every().day.at(thistime).do(mainCron)
             
 if __name__ == "__main__":
     print("[i] Rewards Daemon active. Waiting for scheduled tasks...")
@@ -365,4 +367,4 @@ if __name__ == "__main__":
     
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(10)
