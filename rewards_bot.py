@@ -52,7 +52,7 @@ RESET = "\033[0m"
 
 LAST_RUN_FILE = os.path.join(BASE_DIR, "last_run.txt")
 
-thistime = "16:18" # time for execution
+thistime = "14:20" # time for execution
 
 def hasRunToday():
   if not os.path.exists(LAST_RUN_FILE):
@@ -311,7 +311,7 @@ def execDesktopSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            DAILYSEARCH = KEYWORDS[:1]
+            DAILYSEARCH = KEYWORDS[:10]
 
             for idx, keyword in enumerate(DAILYSEARCH, 1):
                 print(f"• ({idx}/{len(DAILYSEARCH)}) Searching (Desktop):\n'{keyword}...'")
@@ -337,10 +337,10 @@ def execDesktopSearch():
 
 
 def mainCron():
-   print("Starting scheduled cron cycle...")
+   print("\nStarting scheduled cron cycle...")
    try:  
         if not execDesktopSearch():
-                return
+            return
             
         print(f"\n{AMARILLO}[$] Intermission: Profile switching in 2 seconds...{RESET}") # executions
         time.sleep(2)
