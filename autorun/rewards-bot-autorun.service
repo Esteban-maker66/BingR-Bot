@@ -1,0 +1,16 @@
+[Unit]
+Description=Bing Rewards Bot (automatic start on boot)
+After=graphical-session.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@@REPO_DIR@@
+ExecStart=@@REPO_DIR@@/autorun/autorun.sh
+Environment=DISPLAY=:0
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target
