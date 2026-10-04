@@ -311,7 +311,7 @@ def execDesktopSearch():
             time.sleep(random.uniform(3.85, 5.95))
 
             random.shuffle(KEYWORDS)
-            DAILYSEARCH = KEYWORDS[:10]
+            DAILYSEARCH = KEYWORDS[:20]
 
             for idx, keyword in enumerate(DAILYSEARCH, 1):
                 print(f"• ({idx}/{len(DAILYSEARCH)}) Searching (Desktop):\n'{keyword}...'")

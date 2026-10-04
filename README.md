@@ -56,6 +56,7 @@ The version tags above describe the versions currently declared or used by the r
 - automatic claiming points
 - Persistent Edge profile support for authenticated sessions.
 - Configurable launch and navigation timeouts.
+- Automatic start on every boot through the `autorun/` systemd user service.
 - Optional daily scheduling through a systemd user timer.
 - Early Docker integration under `api/`.
 
@@ -68,6 +69,7 @@ The version tags above describe the versions currently declared or used by the r
 ├── pyproject.toml          # Project metadata and dependencies
 ├── uv.lock                 # Locked Python dependency versions
 ├── api/                    # Container and future Go API work
+├── autorun/                # Boot-time launcher for the bot (systemd user service)
 ├── Driver_Notes/           # Microsoft Edge WebDriver notes and licenses
 └── systemd/                # Example user service and timer files
 ```
@@ -130,6 +132,25 @@ uv run rewards_bot.py
 The bot uses `.edge-playwright-profile/` by default. This directory can contain cookies, session data, cache, and other local browser state. Keep it private and do not commit it.
 
 # Background execution
+
+## Automatic start at boot
+
+`autorun/` makes the bot self-starting on every system boot. It ships a bash launcher plus a systemd user service (with an XDG autostart fallback):
+
+```bash
+cd autorun
+./install.sh                                # install + enable (does not start it yet)
+systemctl --user start rewards-bot-autorun.service
+```
+
+```bash
+systemctl --user status rewards-bot-autorun.service
+journalctl --user -u rewards-bot-autorun.service -f
+./autorun.sh --status
+./uninstall.sh                              # remove the boot-time startup
+```
+
+Requires lingering so the service starts without a logged-in session: `sudo loginctl enable-linger "$USER"`. See `autorun/README.md` for details.
 
 ## Linux with systemd
 

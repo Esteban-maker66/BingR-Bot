@@ -17,6 +17,8 @@ Driver_Notes/credits.html
 
 # Reports
 *.log
+logs/
+.autorun.lock
 
 # Agents
 .agents/
